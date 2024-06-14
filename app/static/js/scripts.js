@@ -6,3 +6,16 @@ function getQuote() {
             document.getElementById('author').innerText = data.author ? `- ${data.author}` : '';
         });
 }
+
+// Function to handle automatic dismissal of alerts after a specified time
+function dismissAlerts() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(function() {
+            alert.remove();
+        }, 3000); // Adjust timeout value as needed
+    });
+}
+
+// Call dismissAlerts function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', dismissAlerts);

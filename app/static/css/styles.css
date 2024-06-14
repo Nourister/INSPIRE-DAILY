@@ -1,54 +1,68 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #b33c3c;
+    background-color: #5b4848;
+    display: flex;
+    flex-direction: column;
 }
 
 nav{
     position: fixed;
     top: 0;
-    right: 0;
-    text-align: center;
+    left: 0;
+    height: 100px;
     display: flex;
-    justify-content: space-between;
-    margin-top: 0;
+    justify-content: center;
     padding: 10px;
     width: 100%;
-    background-color: rgb(238, 175, 175);
+    background-color: rgb(237, 207, 207);
+}
+
+nav ul{
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 nav a{
     text-decoration: none;
     font-size: 20px;
     font-weight: 400;
-    text-align: center;
     color: rgb(70, 108, 189);
-    margin-top: 15px
+    margin: 0 10px;
 }
 
 nav a:hover{
     color: #392f2f;
 
 }
-nav ul{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 nav ul li{
-    list-style: none;
-    text-decoration: none;
-    margin-right: 30px;
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: 400;
+    align-items: center;
+    margin-right: 18px;
 }
+
+nav ul li:first-child {
+    margin-left: auto;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 .container {
     text-align: center;
     padding: 20px;
-    background-color: rgb(215, 208, 208);
+    background-color: rgb(193, 184, 184);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: absolute;
@@ -76,5 +90,5 @@ button {
 }
 
 button:hover {
-    background-color: #d7e6f4;
+    background-color: #667f97;
 }
