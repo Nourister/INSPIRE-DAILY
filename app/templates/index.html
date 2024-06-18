@@ -2,12 +2,17 @@
 
 {% block content %}
 
-    <div class="container">
-        <h1>Daily Inspirational Quotes</h1>
-        <div id="quote-container">
-            <p id="quote">Click the button to get an inspirational quote.</p>
-            <p id="author"></p>
-        </div>
-        <button><a href="/get_quote">Get Quote</a></button>
+<div class="container">
+    <h1>Daily Inspirational Quotes</h1>
+    <div id="quote-container">
+        <p id="quote">Click the button to get an inspirational quote.</p>
+        <p id="author"></p>
     </div>
+    {% if current_user.is_authenticated %}
+        <button><a href="{{ url_for('get_quote') }}">Get Quote</a></button>
+    {% else %}
+        <p>Please <a href="{{ url_for('login') }}">log in</a> to get an inspirational quote.</p>
+    {% endif %}
+</div>
+
 {% endblock %}
