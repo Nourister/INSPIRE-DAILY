@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from app import app, db
+from werkzeug.security import generate_password_hash, check_password_hash
+from app import app, db, bcrypt
 from app.models import Quote, User
 from app.forms import QuoteForm, LoginForm, RegistrationForm
-from werkzeug.security import generate_password_hash, check_password_hash
 import random
 
 
@@ -63,7 +63,7 @@ def search_quotes():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        hashed_password = bcrypt.generate_password_hash(form.password1.data).decode('utf-8')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()

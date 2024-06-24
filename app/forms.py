@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from email_validator import validate_email, EmailNotValidError
+from .models import User
+from flask_wtf.file import FileField, FileRequired
 
 class QuoteForm(FlaskForm):
     text = StringField('Quote', validators=[DataRequired(), Length(max=500)])
@@ -11,9 +13,15 @@ class QuoteForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
+    password1 = PasswordField('Enter Your Password', validators=[DataRequired(), Length(min=6)])
+    password2 = PasswordField('Confirm Your Password', validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField('Sign In')
+
+    def validate_username(self, username):
+        """Validate if the username exists"""
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise EmailNotValidError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
         try:
@@ -25,4 +33,5 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
     submit = SubmitField('Login')

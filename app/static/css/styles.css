@@ -112,12 +112,10 @@ nav form button {
     margin-left: 5px;
 }
 
-/* styles.css */
-
 /* Form container */
 .form-container {
     max-width: 400px;
-    margin: 0 auto;   /* Center align the form */
+    margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
