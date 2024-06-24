@@ -63,8 +63,8 @@ def search_quotes():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password1.data).decode('utf-8')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        new_user = User(username=form.username.data, email=form.email.data)
+        new_user.password = form.password1.data
         db.session.add(new_user)
         db.session.commit()
         flash('Account created successfully!', 'success')
@@ -76,15 +76,11 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            if check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for('index'))
-            else:
-                flash('Login Unsuccessful. Please check your email and password.', 'danger')
+        if user and user.verify_password(form.password.data):
+            login_user(user)
+            return redirect(url_for('index'))
         else:
-            flash('You have not registered yet. Please register first.', 'danger')
-            return redirect(url_for('register'))
+            flash('Login Unsuccessful. Please check your email and password.', 'danger')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
