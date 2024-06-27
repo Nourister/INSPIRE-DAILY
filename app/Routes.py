@@ -1,10 +1,11 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import app, db, bcrypt
+from flask_mail import Message
+import random
+from app import app, db, bcrypt, mail
 from app.models import Quote, User
 from app.forms import QuoteForm, LoginForm, RegistrationForm
-import random
 
 
 quotes = [
@@ -63,12 +64,32 @@ def search_quotes():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, email=form.email.data)
-        new_user.password = form.password1.data
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Account created successfully!', 'success')
-        return redirect(url_for('login'))
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('This email address is already registered. Please use a different email or log in.', 'danger')
+            return redirect(url_for('register'))  # Redirect back to the registration page
+        else:
+            new_user = User(username=form.username.data, email=form.email.data)
+            new_user.password = form.password1.data
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created successfully!', 'success')
+
+            # Send a random quote to the new user's email
+            quote = random.choice(quotes)
+            msg = Message(subject='Welcome to Inspire Quotes!',
+                          recipients=[form.email.data])
+            msg.body = f'Hello {form.username.data},\n\nWelcome to Inspire Quotes! Here is your random quote:\n\n"{quote["text"]}" - {quote["author"]}'
+            
+            try:
+                mail.send(msg)
+                flash('A random quote has been sent to your email!', 'info')
+            except Exception as e:
+                flash('Failed to send the random quote to your email. Please contact support.', 'danger')
+                app.logger.error(f"Failed to send email: {str(e)}")
+
+            return redirect(url_for('login'))
+
     return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,6 +105,47 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/about')
+@login_required
+def about():
+    return render_template('about.html')
+
+@app.route('/contact', methods=['GET', 'POST'])
+@login_required
+def contact():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        # Send email to nouristerjuma@gmail.com
+        recipients = ['nouristerjuma@gmail.com']
+        msg = Message(subject='New Contact Form Submission',
+                      recipients=recipients)
+        msg.body = f'You have received a new message from {name} ({email}):\n\n{message}'
+        try:
+            mail.send(msg)
+            flash('Your message has been sent successfully!', 'success')
+        except Exception as e:
+            flash('An error occurred while sending your message. Please try again later.', 'danger')
+            app.logger.error(f"Failed to send email: {str(e)}")
+
+        return redirect(url_for('contact'))
+
+    return render_template('contact.html')
+
+@app.route('/test_email')
+def test_email():
+    msg = Message(subject='Test Email',
+                  recipients=['your-email@gmail.com'])
+    msg.body = 'This is a test email.'
+    try:
+        mail.send(msg)
+        return 'Test email sent!'
+    except Exception as e:
+        return f'Failed to send test email: {str(e)}'

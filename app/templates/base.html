@@ -15,10 +15,9 @@
         <ul>
             {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('all_quotes') }}">About</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
                 <li>
-                <li><a href="{{ url_for('index') }}">All Quoes</a></li>
-                <li><a href="{{ url_for('index') }}">Contacts</a></li>
                     <form action="{{ url_for('search_quotes') }}" method="get" style="display: flex; align-items: center;">
                         <input type="text" name="query" placeholder="Search quotes or authors..." style="padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
                         <button type="submit" style="padding: 5px 10px; border: none; border-radius: 5px; background-color: #667f97; color: white; margin-left: 5px;">Search</button>
@@ -27,27 +26,29 @@
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
                 <li><a href="{{ url_for('register') }}">Register</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
             {% endif %}
         </ul>
     </nav>
 
-<!-- Flash Messages (at the top of the page) -->
-<div class="container-fluid" style="margin-bottom: 20px;">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
+    <!-- Flash Messages (at the top of the page) -->
+    <div class="container-fluid" style="margin-bottom: 20px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     <!-- Main Content Container -->
     <div class="container mt-5">

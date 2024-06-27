@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="container">
-    <h1>Daily Inspirational Quotes</h1>
-    <div id="quote-container">
-        <p id="quote">Click the button to get an inspirational quote.</p>
-        <p id="author"></p>
-    </div>
     {% if current_user.is_authenticated %}
+        <h1>Daily Inspirational Quotes</h1>
+        <p>Welcome to Inspire Quotes, where you can find a new inspirational quote every day. Log in to get started!</p>
+        <div id="quote-container">
+            <p id="quote">Click the button to get an inspirational quote.</p>
+            <p id="author"></p>
+        </div>
         <button><a href="{{ url_for('get_quote') }}">Get Quote</a></button>
     {% else %}
-        <p>Please <a href="{{ url_for('login') }}">log in</a> to get an inspirational quote.</p>
+        <p>Please <a href="{{ url_for('login') }}">log in</a> to access the site.</p>
     {% endif %}
 </div>
-
 {% endblock %}
