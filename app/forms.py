@@ -1,3 +1,5 @@
+from app import app, db
+from itsdangerous import TimedSerializer as Serializer
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
@@ -9,6 +11,7 @@ class QuoteForm(FlaskForm):
     text = StringField('Quote', validators=[DataRequired(), Length(max=500)])
     author = StringField('Author', validators=[DataRequired(), Length(max=100)])
     submit = SubmitField('Submit')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
@@ -35,3 +38,9 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class ResetPasswordForm(FlaskForm):
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('Reset Password')

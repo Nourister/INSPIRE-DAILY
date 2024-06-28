@@ -5,7 +5,7 @@ from flask_mail import Message
 import random
 from app import app, db, bcrypt, mail
 from app.models import Quote, User
-from app.forms import QuoteForm, LoginForm, RegistrationForm
+from app.forms import QuoteForm, LoginForm, RegistrationForm, ResetPasswordForm
 
 
 quotes = [
@@ -130,8 +130,10 @@ def contact():
         msg.body = f'You have received a new message from {name} ({email}):\n\n{message}'
         try:
             mail.send(msg)
+            app.logger.info('Email sent successfully!')
             flash('Your message has been sent successfully!', 'success')
         except Exception as e:
+            app.logger.error(f"Failed to send email: {str(e)}")
             flash('An error occurred while sending your message. Please try again later.', 'danger')
             app.logger.error(f"Failed to send email: {str(e)}")
 
@@ -142,10 +144,55 @@ def contact():
 @app.route('/test_email')
 def test_email():
     msg = Message(subject='Test Email',
-                  recipients=['your-email@gmail.com'])
+                  recipients=['nouristerjuma@gmail.com'])
     msg.body = 'This is a test email.'
     try:
         mail.send(msg)
         return 'Test email sent!'
     except Exception as e:
         return f'Failed to send test email: {str(e)}'
+
+
+@app.route('/forgot_password', methods=['GET'])
+def forgot_password():
+    email = request.args.get('email')
+    if email:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = user.get_reset_token()
+            send_password_reset_email(user, token)
+            flash('An email has been sent with instructions to reset your password.', 'info')
+        else:
+            flash('No account found with that email address.', 'danger')
+        return redirect(url_for('index'))
+    return render_template('forgot_password.html')
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.verify_reset_token(token)
+    if not user:
+        flash('Invalid or expired token. Please request a new password reset.', 'danger')
+        return redirect(url_for('index'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        db.session.commit()
+        flash('Your password has been updated! You can now log in.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html', form=form)
+
+
+# Helper function to send password reset email
+def send_password_reset_email(user, token):
+    msg = Message('Password Reset Request',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_password', token=token, _external=True)}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)

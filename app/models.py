@@ -1,4 +1,5 @@
-from app import db
+from app import app, db
+from itsdangerous import TimedSerializer as Serializer
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,14 +17,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
-
-    # @property
-    # def password(self):
-    #     raise AttributeError('Password is not a readable attribute')
-    
-    # @password.setter
-    # def password(self, password):
-    #     self.password_hash = generate_password_hash(password=password)
     
     def verify_password(self, password):
         return self.password == password
