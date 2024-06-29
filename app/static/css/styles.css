@@ -101,15 +101,17 @@ button:hover {
 
 /* search_field styling */
 
-nav form input {
+form input {
     padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-top: -150px;
 }
 
-nav form button {
+form button {
     padding: 5px 10px;
     border: none;
+    margin-top: -150px;
     border-radius: 5px;
     background-color: #667f97;
     color: white;
@@ -254,60 +256,28 @@ footer h5 {
     font-size: 14px;
 }
 
-/* forgot_password styling */
-
-.pass-form-auth {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #c7b6b6;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.pass-form-auth h1 {
-    font-size: 22px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.pass-form-auth form {
-    display: flex;
-    flex-direction: column;
-}
-
-.pass-form-auth label {
-    font-weight: bold;
-}
-
-.pass-form-auth input[type="email"],
-.pass-form-auth input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin: 6px 0;
-    box-sizing: border-box;
-}
-
-.pass-form-auth .error-message {
-    color: red;
-}
-
-.pass-form-auth button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
+/* rating styles */
+.star-rating {
+    direction: rtl;
     display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
-.pass-form-auth button[type="submit"]:hover {
-    background-color: #45a049;
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    font-size: 24px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f5b301;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5b301;
 }

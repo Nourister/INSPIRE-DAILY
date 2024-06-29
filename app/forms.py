@@ -1,8 +1,8 @@
 from app import app, db
 from itsdangerous import TimedSerializer as Serializer
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, NumberRange
 from email_validator import validate_email, EmailNotValidError
 from .models import User
 from flask_wtf.file import FileField, FileRequired
@@ -11,6 +11,11 @@ class QuoteForm(FlaskForm):
     text = StringField('Quote', validators=[DataRequired(), Length(max=500)])
     author = StringField('Author', validators=[DataRequired(), Length(max=100)])
     submit = SubmitField('Submit')
+
+
+class RatingForm(FlaskForm):
+    rating = IntegerField('Rating', validators=[DataRequired(), NumberRange(min=1, max=5)])
+    submit = SubmitField('Submit Rating')
 
 
 class RegistrationForm(FlaskForm):

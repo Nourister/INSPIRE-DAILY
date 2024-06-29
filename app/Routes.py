@@ -1,20 +1,17 @@
-from flask import render_template, redirect, url_for, flash, request
+from app import db
+from flask import render_template, redirect, url_for, flash, request, send_file, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
+from app.models import User
+from app.populate_db import Quote
+from sqlalchemy import func
 import random
+import io
 from app import app, db, bcrypt, mail
-from app.models import Quote, User
-from app.forms import QuoteForm, LoginForm, RegistrationForm, ResetPasswordForm
+from app.forms import QuoteForm, LoginForm, RegistrationForm, ResetPasswordForm, RatingForm
 
 
-quotes = [
-    {"text": "The best way to get started is to quit talking and begin doing.", "author": "Walt Disney"},
-    {"text": "The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty.", "author": "Winston Churchill"},
-    {"text": "Don’t let yesterday take up too much of today.", "author": "Will Rogers"},
-    {"text": "You learn more from failure than from success. Don’t let it stop you. Failure builds character.", "author": "Unknown"},
-    {"text": "It’s not whether you get knocked down, it’s whether you get up.", "author": "Vince Lombardi"}
-]
 
 @app.route('/')
 def index():
@@ -23,9 +20,21 @@ def index():
 @app.route('/get_quote', methods=['GET'])
 @login_required
 def get_quote():
-    # Fetch a random quote from the predefined list
-    quote = random.choice(quotes)
-    return render_template('quotes.html', quote=quote)
+    try:
+        quote = Quote.query.order_by(func.random()).first()
+
+        if quote:
+            app.logger.info(f"Quote fetched: {quote}")
+            return render_template('quotes.html', quote=quote, form=RatingForm())
+        else:
+            app.logger.warning('No quotes found in the database.')
+            flash('No quotes found in the database.', 'warning')
+            return redirect(url_for('index'))
+    except Exception as e:
+        app.logger.error(f"Error fetching quote: {str(e)}")
+        flash('Error fetching quote. Please try again later.', 'danger')
+        return redirect(url_for('index'))
+
 
 @app.route('/new_quote', methods=['GET', 'POST'])
 @login_required
@@ -40,14 +49,18 @@ def new_quote():
             db.session.add(new_quote)
             db.session.commit()
             flash('Quote added successfully!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('get_quote'))  # Redirect to get_quote after adding a new quote
     return render_template('new_quote.html', form=form)
+
 
 @app.route('/all_quotes', methods=['GET'])
 @login_required
 def all_quotes():
     quotes_from_db = Quote.query.all()
+    if not quotes_from_db:
+        flash('No quotes found in the database.', 'info')
     return render_template('all_quotes.html', quotes=quotes_from_db)
+
 
 @app.route('/search', methods=['GET'])
 @login_required
@@ -67,30 +80,18 @@ def register():
         existing_user = User.query.filter_by(email=form.email.data).first()
         if existing_user:
             flash('This email address is already registered. Please use a different email or log in.', 'danger')
-            return redirect(url_for('register'))  # Redirect back to the registration page
+            return redirect(url_for('register'))  # Redirect back to the registration page or handle the error condition
         else:
             new_user = User(username=form.username.data, email=form.email.data)
             new_user.password = form.password1.data
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully!', 'success')
-
-            # Send a random quote to the new user's email
-            quote = random.choice(quotes)
-            msg = Message(subject='Welcome to Inspire Quotes!',
-                          recipients=[form.email.data])
-            msg.body = f'Hello {form.username.data},\n\nWelcome to Inspire Quotes! Here is your random quote:\n\n"{quote["text"]}" - {quote["author"]}'
-            
-            try:
-                mail.send(msg)
-                flash('A random quote has been sent to your email!', 'info')
-            except Exception as e:
-                flash('Failed to send the random quote to your email. Please contact support.', 'danger')
-                app.logger.error(f"Failed to send email: {str(e)}")
-
+            # Optionally, perform additional actions after successful registration
             return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -153,46 +154,44 @@ def test_email():
         return f'Failed to send test email: {str(e)}'
 
 
-@app.route('/forgot_password', methods=['GET'])
-def forgot_password():
-    email = request.args.get('email')
-    if email:
-        user = User.query.filter_by(email=email).first()
-        if user:
-            token = user.get_reset_token()
-            send_password_reset_email(user, token)
-            flash('An email has been sent with instructions to reset your password.', 'info')
-        else:
-            flash('No account found with that email address.', 'danger')
-        return redirect(url_for('index'))
-    return render_template('forgot_password.html')
+from flask import send_file, request, jsonify
 
+@app.route('/download_quote', methods=['GET'])
+@login_required
+def download_quote():
+    quote_text = request.args.get('quote_text')
+    quote_author = request.args.get('quote_author')
 
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    user = User.verify_reset_token(token)
-    if not user:
-        flash('Invalid or expired token. Please request a new password reset.', 'danger')
-        return redirect(url_for('index'))
+    if not quote_text or not quote_author:
+        return jsonify({'error': 'Quote text and author must be provided.'}), 400
 
-    form = ResetPasswordForm()
+    # Prepare the content of the quote as a text file
+    content = f"{quote_text}\n- {quote_author}"
+
+    # Create an in-memory buffer for the file content
+    buffer = io.BytesIO()
+    buffer.write(content.encode('utf-8'))
+    buffer.seek(0)  # Move the cursor to the beginning of the buffer
+
+    # Return the file as a response using Flask's send_file function
+    return send_file(
+        buffer,
+        as_attachment=True,  # Ensure the browser treats it as an attachment
+        download_name="quote.txt",  # Specify the filename for the downloaded file
+        mimetype='text/plain'  # Specify the MIME type of the file
+    )
+
+@app.route('/rate_quote/<int:quote_id>', methods=['POST'])
+@login_required
+def rate_quote(quote_id):
+    quote = Quote.query.get_or_404(quote_id)
+    form = RatingForm()
+
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user.password = hashed_password
+        quote.rating = form.rating.data
         db.session.commit()
-        flash('Your password has been updated! You can now log in.', 'success')
-        return redirect(url_for('login'))
+        flash('Thank you for your rating!', 'success')
+    else:
+        flash('Invalid rating. Please select a value between 1 and 5.', 'danger')
 
-    return render_template('reset_password.html', form=form)
-
-
-# Helper function to send password reset email
-def send_password_reset_email(user, token):
-    msg = Message('Password Reset Request',
-                  recipients=[user.email])
-    msg.body = f'''To reset your password, visit the following link:
-{url_for('reset_password', token=token, _external=True)}
-
-If you did not make this request then simply ignore this email and no changes will be made.
-'''
-    mail.send(msg)
+    return redirect(url_for('get_quote'))

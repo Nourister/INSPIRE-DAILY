@@ -17,12 +17,8 @@
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
-                <li>
-                    <form action="{{ url_for('search_quotes') }}" method="get" style="display: flex; align-items: center;">
-                        <input type="text" name="query" placeholder="Search quotes or authors..." style="padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
-                        <button type="submit" style="padding: 5px 10px; border: none; border-radius: 5px; background-color: #667f97; color: white; margin-left: 5px;">Search</button>
-                    </form>
-                </li>
+                <li><a href="{{ url_for('get_quote') }}">Get Quote</a></li>
+                <li><a href="{{ url_for('new_quote') }}">New Quote</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('index') }}">Home</a></li>
