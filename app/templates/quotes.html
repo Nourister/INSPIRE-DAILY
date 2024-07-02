@@ -1,33 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form action="{{ url_for('search_quotes') }}" method="get" style="display: flex; align-items: center;">
-        <input type="text" name="query" placeholder="Search quotes or authors..." style="padding: 5px; border-radius: 5px; border: 2px solid #000">
-        <button type="submit" style="padding: 7px 10px; border: none; border-radius: 5px; background-color: #667f97; color: white; margin-left: 5px;">Search</button>
-    </form>
-    {% if quote %}
-        <div class="quote">
-            <p>{{ quote.text }}</p>
-            <p>- {{ quote.author }}</p>
-            <div class="actions">
-                <button>
-                    <a href="{{ url_for('download_quote', quote_text=quote.text, quote_author=quote.author) }}">
-                        Download
-                    </a>
+    <div class="container mt-5">
+        <form action="{{ url_for('search_quotes') }}" method="get" class="search-form">
+            <input type="text" name="query" placeholder="Search quotes or authors..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        {% if quote %}
+            <div class="quote mt-4">
+                <p>{{ quote.text }}</p>
+                <p>- {{ quote.author }}</p>
+
+                <div class="actions mt-3">
+                    <button class="btn btn-primary">
+                        <a href="{{ url_for('download_quote', quote_text=quote.text, quote_author=quote.author) }}" class="text-white">
+                            Download
+                        </a>
+                    </button>
+                </div>
+
+                <div class="rating mt-3">
+                    {% if quote.rating %}
+                        <p>Rating: {{ quote.rating }}/5</p>
+                    {% else %}
+                        <p>No ratings yet</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-dark">
+                    <a href="{{ url_for('get_quote') }}" class="text-white">Next <i class="fas fa-forward"></i></a>
                 </button>
             </div>
-            <div class="rating">
-                {% if quote.rating %}
-                    <p>Rating: {{ quote.rating }}/5</p>
-                {% else %}
-                    <p>No ratings yet</p>
-                {% endif %}
-            </div>
-        </div>
-        
-        <button><a href="{{ url_for('get_quote') }}">Next <i class="fa-solid fa-forward"></i></a></button>
-        
-    {% else %}
-        <p>No quotes found in the database.</p>
-    {% endif %}
+        {% else %}
+            <p class="mt-4">No quotes found in the database.</p>
+        {% endif %}
+    </div>
 {% endblock %}

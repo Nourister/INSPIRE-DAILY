@@ -1,3 +1,8 @@
+function toggleMenu() {
+    const navbar = document.querySelector('.navbar');
+    navbar.classList.toggle('active');
+}
+
 function getQuote() {
     fetch('/get_quote')
         .then(response => response.json())

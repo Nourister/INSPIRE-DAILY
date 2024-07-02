@@ -2,15 +2,17 @@
 
 {% block content %}
 <div class="container">
-    <h1>Search Results for "{{ query }}"</h1>
+    <h1 class="mt-5">Search Results for "{{ query }}"</h1>
     {% if quotes %}
-        <ul>
+        <ul class="list-group mt-3">
             {% for quote in quotes %}
-                <li>{{ quote.text }} - <em>{{ quote.author }}</em></li>
+                <li class="list-group-item">
+                    <span>{{ quote.text }}</span> - <em>{{ quote.author }}</em>
+                </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No quotes found.</p>
+        <p class="mt-3">No quotes found.</p>
     {% endif %}
 </div>
 {% endblock %}

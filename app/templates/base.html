@@ -10,8 +10,11 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav>
+    <nav class="navbar">
         <a href="{{ url_for('index') }}" class="logo">INSPIRE QUOTES</a>
+        <a href="javascript:void(0);" class="menu-bar" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </a>
         <ul>
             {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('index') }}">Home</a></li>
