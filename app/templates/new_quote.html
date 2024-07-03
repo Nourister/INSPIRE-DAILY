@@ -1,19 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Add New Quote</h1>
-    <form method="post">
-        {{ form.hidden_tag() }}<br>
-        {{ form.text.label }}<br>
-        {{ form.text(size=80) }}<br>
-        {% for error in form.text.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}<br>
-        {{ form.author.label }}<br>
-        {{ form.author(size=40) }}<br>
-        {% for error in form.author.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}<br>
-        {{ form.submit() }}
-    </form>
+    <div class="container mt-5">
+        <h1 class="text-center">Add New Quote</h1>
+        <form method="post" class="custom-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group text-center">
+                {{ form.text.label(class="form-label") }}
+                {{ form.text(class="form-control", size=80) }}
+                {% for error in form.text.errors %}
+                    <span class="text-danger">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="form-group text-center">
+                {{ form.author.label(class="form-label") }}
+                {{ form.author(class="form-control", size=40) }}
+                {% for error in form.author.errors %}
+                    <span class="text-danger">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="text-center">
+            {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
 {% endblock %}

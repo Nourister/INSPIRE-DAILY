@@ -1,32 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="contact">
-    <div class="contact-info">
-        <h2>Contact Information</h2>
-        <p><strong>Address:</strong> 00100 Main Street, Nairobi city (Kenya) </p>
-        <p><strong>Phone:</strong> +254-793653586, & +234-000000000</p>
-        <p><strong>Email:</strong> nouristerjuma@gmail.com</p>
-    </div>
-    <div class="contact-form">
-        <h2>Contact Form</h2>
-        <form method="POST" action="{{ url_for('contact') }}">
-            <label for="name">Name:</label>
-            <input type="text" name="name" id="name" required>
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
-            <label for="message">Message:</label>
-            <textarea name="message" id="message" required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-    </div>
+<section class="contact" id="contact">
+    <h2 class="heading">Contact <span>Me</span></h2>
+
+    <form action="#">
+        <div class="input-box">
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email Address"> 
+        </div>
+        <div class="input-box">
+            <input type="number" placeholder="Mobile Number">
+            <input type="text" placeholder="Email Subject">
+        </div>
+        <textarea name="" id="" cols="5" rows="5" placeholder="Your Message"></textarea>
+        <input type="submit" value="Send Message" class="btn btn1">
+    </form>
 </section>
-<footer>
-    <div class="social-icons">
-        <a href="https://www.linkedin.com/in/nourister-juma-506655265" class="social-icon"> <i class="fa-brands fa-linkedin"></i> </a>
-        <a href="https://x.com/home" class="social-icon"> <i class="fab fa-twitter"></i> </a>
-        <a href="https://www.instagram.com/nourister.juma?igsh=NDR2ZZI6a2Vteampl" class="social-icon"> <i class="fab fa-instagram"></i> </a>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <div class="footer-text">
+        <p>Copyright &copy; 2024 | All Rights Reserved.</p>
     </div>
-    <h5>CopyRight © 2024. All rights reserved</h5>
 </footer>
 {% endblock %}

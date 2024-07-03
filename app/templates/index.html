@@ -7,19 +7,23 @@
             <h3>Hi, </h3>
             <h1>Nourister Juma</h1>
             <h3>I'm a <span>Software Developer</span></h3>
-            <p>An ALX Software Engineering graduate specializing in backend development, I excel in designing and implementing robust backend systems. With a strong foundation in software engineering principles and a passion for problem-solving, I have a skill in buiding a scalable and efficient server-side applications using languages like Python, Javascript, C+, C. </p>
-        <div class="social-media">
-            <a href="https://www.linkedin.com/in/nourister-juma-506655265" class="social-icon"> <i class="fa-brands fa-linkedin"></i> </a>
-            <a href="https://x.com/home" class="social-icon"> <i class="fab fa-twitter"></i> </a>
-            <a href="https://www.instagram.com/nourister.juma?igsh=NDR2ZZI6a2Vteampl" class="social-icon"> <i class="fab fa-instagram"></i> </a>
+            <p>An ALX Software Engineering graduate specializing in backend development, I excel in designing and implementing robust backend systems. With a strong foundation in software engineering principles and a passion for problem-solving, I have a skill in building scalable and efficient server-side applications using languages like Python, JavaScript, C, and C++. </p>
+            <div class="social-media">
+                <a href="https://www.linkedin.com/in/nourister-juma-506655265" class="social-icon"> <i class="fa-brands fa-linkedin"></i> </a>
+                <a href="https://x.com/home" class="social-icon"> <i class="fab fa-twitter"></i> </a>
+                <a href="https://www.instagram.com/nourister.juma?igsh=NDR2ZZI6a2Vteampl" class="social-icon"> <i class="fab fa-instagram"></i> </a>
+            </div>
+            <a href="{{ url_for('static', filename='uploads/Nourister_Juma_CV.pdf') }}" target="_blank" class="btn">Download CV</a>
         </div>
-        <!-- <a href="Resume.pdf" class="btn">Download CV</a>
         <div class="home-image">
-            <img src="C:\Users\juman\OneDrive\Desktop\INSPIRE DAILY\app\images\image1.jpeg" alt="my-profile">
-        </div> -->
+            <img src="{{ url_for('static', filename='images/image1.jpeg') }}" alt="my-profile">
+        </div>
     </section>
-        <button><a href="{{ url_for('get_quote') }}">Get Quote</a></button>
     {% else %}
-        <p>Please <a href="{{ url_for('login') }}">log in</a> to access the site.</p>
+    <section class="home" id="home">
+        <div class="centered-text">
+            <p style="font-size: 1.5rem; text-align: center;">Please <a href="{{ url_for('login') }}">log in</a> to access the site.</p>
+        </div>
+    </section>
     {% endif %}
 {% endblock %}

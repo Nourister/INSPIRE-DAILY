@@ -3,6 +3,11 @@ function toggleMenu() {
     navbar.classList.toggle('active');
 }
 
+function toggleLoginForm() {
+    document.getElementById('login-form').classList.toggle('active');
+    document.getElementById('register-form').classList.remove('active');
+}
+
 function getQuote() {
     fetch('/get_quote')
         .then(response => response.json())

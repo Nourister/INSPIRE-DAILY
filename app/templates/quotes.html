@@ -8,7 +8,7 @@
         </form>
 
         {% if quote %}
-            <div class="quote mt-4">
+            <div class="quote mt-4 text-center">
                 <p>{{ quote.text }}</p>
                 <p>- {{ quote.author }}</p>
 
@@ -29,7 +29,7 @@
                 </div>
             </div>
             
-            <div class="mt-4">
+            <div class="mt-4 text-center">
                 <button class="btn btn-dark">
                     <a href="{{ url_for('get_quote') }}" class="text-white">Next <i class="fas fa-forward"></i></a>
                 </button>
@@ -38,4 +38,7 @@
             <p class="mt-4">No quotes found in the database.</p>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block styles %}
 {% endblock %}

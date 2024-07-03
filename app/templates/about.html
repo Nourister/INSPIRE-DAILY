@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h1>About Us</h1>
-    <div class="about-content">
-        <p>Welcome to Inspire Quotes, your daily source of inspiration.</p>
-        <p>Our mission is to provide you with the most inspiring quotes to brighten your day and
-        motivate you to achieve your goals.</p>
-        <p>We believe in the power of words and their ability to inspire, uplift, and transform lives.</p> <p>Our team curates the best quotes from various sources to ensure you always have something uplifting to read.</p>
+<section class="about" id="about">
+    <div class="about-img">
+        <img src="{{ url_for('static', filename='images/image2.jpeg') }}" alt="profile">
     </div>
-</div>
+    <div class="about-content">
+        <h2 class="heading">About <span>I.Quotes</span></h2>
+        <h3>InspireHub </h3>
+        <p>Welcome to Inspire Daily, your source of daily inspiration and motivation. At InspireHub, we believe in the power of words to uplift, empower, and transform lives. Whether you're seeking a spark of motivation to kickstart your day or a dose of encouragement to overcome challenges, our curated collection of quotes and insights is here to guide you on your journey.
+
+        Our mission is simple: to provide you with a daily dose of positivity and inspiration. Through carefully selected quotes from visionaries, thinkers, and leaders from all walks of life, we aim to ignite your inner drive and help you stay focused on your goals. Whether you're looking for wisdom from historical figures, modern-day influencers, or anonymous authors, you'll find a wealth of motivational content tailored to inspire every aspect of your life.</p>
+    </div>
+</section>
 {% endblock %}
