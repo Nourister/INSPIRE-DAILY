@@ -8,7 +8,7 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nouristerjuma'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////mnt/c/Users/juman/OneDrive/Desktop/INSPIRE DAILY/nourister.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////c/Users/juman/OneDrive/Desktop/INSPIRE DAILY/nourister.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
@@ -42,3 +42,6 @@ def load_user(user_id):
 
 # Import routes
 from app import routes
+
+# "C:\Users\juman\OneDrive\Desktop\INSPIRE DAILY\nourister.db"
+# sqlite:////mnt/c/Users/juman/OneDrive/Desktop/INSPIRE DAILY/nourister.db'
