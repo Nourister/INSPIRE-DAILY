@@ -32,7 +32,7 @@ app.config['MAIL_DEFAULT_SENDER'] = ('nourister juma', 'nouristerjuma@gmail.com'
 mail = Mail(app)
 
 # Import models
-from app.models import User, Quote
+# from app.models import User, Quote
 
 # Create database tables if do not exit
 with app.app_context():
@@ -43,4 +43,4 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # Import routes
-from app import routes
+# from app import routes
