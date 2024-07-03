@@ -1,16 +1,13 @@
-from app import db
 from flask import render_template, redirect, url_for, flash, request, send_file, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
-from app.models import User
-from app.populate_db import Quote
 from sqlalchemy import func
 import random
 import io
 from app import app, db, bcrypt, mail
+from app.models import User, Quote
 from app.forms import QuoteForm, LoginForm, RegistrationForm, ResetPasswordForm, RatingForm
-
 
 
 @app.route('/')
