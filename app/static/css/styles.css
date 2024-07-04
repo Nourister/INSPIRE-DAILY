@@ -80,6 +80,10 @@ body {
     color: #534f4f; /* Example hover text color */
 }
 
+.menu-bar {
+    display: none; /* Hide the menu icon on larger screens */
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
     .navbar {
@@ -110,7 +114,7 @@ body {
         margin-left: 0;
     }
 
-    .menu-icon {
+    .menu-bar {
         display: block; /* Display the menu icon */
         color: rgb(96, 92, 92); /* Example icon color */
         padding: 10px;
@@ -120,10 +124,6 @@ body {
 
 /* Media query for larger screens */
 @media (min-width: 800px) {
-    .menu-icon {
-        display: none; /* Hide the menu icon on larger screens */
-    }
-
     .navbar ul {
         display: flex;
         align-items: center; /* Center align the menu items horizontally */
